@@ -14,12 +14,11 @@
       --bg2: #e9f0ff;
       --accent: #7c3aed;
       --accent-2: #06b6d4;
-      --glass: rgba(255,255,255,0.75);
-      --glass-2: rgba(0,0,0,0.06);
+      --glass: rgba(255,255,255,0.9);
       --ring: rgba(124, 58, 237, 0.25);
     }
     html, body { height: 100%; }
-    body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; }
+    body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, 'Noto Sans'; }
     /* Soft gradient background with glow */
     .bg-orb {
       background:
@@ -29,7 +28,7 @@
     }
     /* Glass panel */
     .glass {
-      background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.8));
+      background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.85));
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       border: 1px solid rgba(17,24,39,0.06);
@@ -45,7 +44,6 @@
       border: 1px solid rgba(17,24,39,0.08);
     }
     .chip:hover { background: rgba(17,24,39,0.06); }
-    .scroll-smooth { scroll-behavior: smooth; }
     .typing-dot {
       width: 6px; height: 6px; border-radius: 9999px; background: #e5e7eb; opacity: 0.8;
       animation: bounce 1.2s infinite ease-in-out;
@@ -72,51 +70,16 @@
     }
     .hide-scrollbar::-webkit-scrollbar { width: 0; height: 0; }
     .hide-scrollbar { scrollbar-width: none; }
-    /* RTL helper if Arabic detected */
     .rtl { direction: rtl; }
   </style>
 </head>
 <body class="bg-orb text-slate-800">
   <div class="min-h-screen flex flex-col items-center justify-start py-8 px-4 md:px-6 lg:px-10">
 
-    <!-- Header -->
-    <header class="w-full max-w-6xl mb-6">
-      <div class="glass rounded-2xl px-6 py-5 md:px-8 md:py-6 flex items-center justify-between">
-        <div class="flex items-center gap-4">
-          <div class="relative">
-            <!-- Logo Orb -->
-            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-500 via-fuchsia-500 to-cyan-400 shadow-lg shadow-violet-700/20 ring-2 ring-white/50 grid place-items-center">
-              <!-- Simple Bot SVG -->
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <rect x="3" y="7" width="18" height="12" rx="6" stroke="white" stroke-opacity=".9" stroke-width="1.5"/>
-                <circle cx="9" cy="13" r="1.6" fill="white"/>
-                <circle cx="15" cy="13" r="1.6" fill="white"/>
-                <rect x="11" y="2" width="2" height="5" rx="1" fill="white"/>
-              </svg>
-            </div>
-            <span class="absolute -bottom-2 -right-2 text-[10px] px-2 py-0.5 rounded-full bg-indigo-600/90 text-indigo-50 font-semibold tracking-wide">DIT</span>
-          </div>
-          <div>
-            <h1 class="text-xl md:text-2xl font-extrabold tracking-tight">Dummy Institute of Technology</h1>
-            <p class="text-slate-500/90 text-sm">Ask anything about institute events — any language.</p>
-          </div>
-        </div>
-
-        <div class="hidden sm:flex items-center gap-3">
-          <button id="btn-export" class="px-3 py-2 rounded-xl chip text-sm font-medium hover:scale-[1.02] transition">
-            Export chat
-          </button>
-          <button id="btn-clear" class="px-3 py-2 rounded-xl chip text-sm font-medium hover:scale-[1.02] transition">
-            Clear chat
-          </button>
-        </div>
-      </div>
-    </header>
-
-    <!-- Main Chat Card -->
+    <!-- Main Content: Two Panels Only -->
     <main class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-3 gap-6">
       <!-- Sidebar -->
-      <aside class="glass rounded-2xl p-5 md:p-6 lg:col-span-1 h-fit">
+      <aside class="glass rounded-2xl p-5 md:p-6 lg:col-span-1 h-[72vh] flex flex-col overflow-hidden">
         <h2 class="text-lg font-bold mb-3">Quick topics</h2>
         <div id="chips" class="flex flex-wrap gap-2">
           <!-- Chips injected by JS -->
@@ -124,33 +87,50 @@
         <hr class="my-5 border-white/10">
         <div class="space-y-3">
           <div class="flex items-center justify-between">
-            <span class="text-sm text-slate-300/90">Language auto-detect</span>
-            <span class="px-2 py-1 rounded-md bg-white/10 text-[11px] font-semibold">ON</span>
+            <span class="text-sm text-slate-600">Language auto-detect</span>
+            <span class="px-2 py-1 rounded-md bg-white/60 text-[11px] font-semibold">ON</span>
           </div>
-          <p class="text-xs text-slate-300/70 leading-relaxed">
+          <p class="text-xs text-slate-600 leading-relaxed">
             Type in English, हिन्दी, Español, Français, or العربية. I’ll reply in the same language when possible.
           </p>
         </div>
         <hr class="my-5 border-white/10">
-        <div class="space-y-3">
+        <div class="space-y-3 overflow-auto pr-1">
           <h3 class="font-semibold">What can I do?</h3>
-          <ul class="text-sm text-slate-600 list-disc ml-5 space-y-1.5">
+          <ul class="text-sm text-slate-700 list-disc ml-5 space-y-1.5">
             <li>Show upcoming events</li>
             <li>Find dates, venues, contacts</li>
             <li>Give registration info</li>
             <li>Summarize event details</li>
           </ul>
         </div>
-        <div class="mt-5 p-4 rounded-xl bg-amber-100 border border-amber-300 text-amber-800 text-sm">
-          Note: This is a demo. It uses sample event data and doesn’t connect to real college systems yet.
-        </div>
       </aside>
 
       <!-- Chat Area -->
-      <section class="glass rounded-2xl p-4 md:p-6 lg:col-span-2 flex flex-col h-[70vh] md:h-[72vh]">
+      <section class="glass rounded-2xl p-4 md:p-6 lg:col-span-2 flex flex-col h-[72vh]">
+        <!-- Top-right Clear -->
+        <div class="flex items-center justify-end -mt-1 mb-2">
+          <button id="btn-clear" class="px-3 py-2 rounded-xl chip text-sm font-medium hover:scale-[1.02] transition">
+            Clear chat
+          </button>
+        </div>
+
         <!-- Messages -->
         <div id="chat" class="flex-1 overflow-y-auto hide-scrollbar scroll-smooth pr-1 space-y-4 text-slate-800">
-          <!-- Messages injected here -->
+          <!-- Default welcome message stays visible -->
+          <div class="flex items-start gap-3">
+            <div class="mt-0.5 shrink-0 w-8 h-8 rounded-xl bg-gradient-to-br from-violet-500 to-cyan-400 grid place-items-center ring-1 ring-white/20">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <rect x="3" y="7" width="18" height="12" rx="6" stroke="white" stroke-opacity=".9" stroke-width="1.4"/>
+                <circle cx="9" cy="13" r="1.4" fill="white"/>
+                <circle cx="15" cy="13" r="1.4" fill="white"/>
+              </svg>
+            </div>
+            <div class="chat-bubble bot rounded-2xl px-4 py-3">
+              <div>Hi! I’m your Institute Events Bot. Ask me about dates, venues, registration, or contacts.</div>
+              <div class="text-slate-600 mt-1">You can ask things like: “Upcoming events?”, “Sports fest details”, “Where is Cultural Night?”, or “How to register?”.</div>
+            </div>
+          </div>
         </div>
 
         <!-- Input -->
@@ -166,10 +146,6 @@
               </svg>
             </button>
           </div>
-          <div class="mt-2 flex sm:hidden gap-2">
-            <button id="btn-export-m" class="flex-1 px-3 py-2 rounded-xl chip text-sm font-medium">Export chat</button>
-            <button id="btn-clear-m" class="flex-1 px-3 py-2 rounded-xl chip text-sm font-medium">Clear</button>
-          </div>
         </div>
       </section>
     </main>
@@ -184,20 +160,18 @@
       { id: 'e4', name: 'Research Poster Showcase', date: '2025-10-12', time: '2:00 PM', venue: 'Hall B', category: 'Academics', contact: 'research@college.edu', registration: 'Free for students', description: 'Students present their research posters with Q&A from faculty and guests.' },
     ];
 
-    // Quick chips (multi-language phrasing)
     const quickChips = [
       "Upcoming events",
       "Sports fest details",
       "Where is Cultural Night?",
       "How to register?",
       "Event contacts",
-      "आज के कार्यक्रम", // Today's events (Hindi intent)
-      "¿Qué hay esta semana?", // Spanish
-      "Quels événements à venir ?", // French
-      "ما هي الفعاليات القادمة؟" // Arabic
+      "आज के कार्यक्रम",
+      "¿Qué hay esta semana?",
+      "Quels événements à venir ?",
+      "ما هي الفعاليات القادمة؟"
     ];
 
-    // Localized strings (responses)
     const ui = {
       en: {
         hello: "Hi! I’m your Institute Events Bot. Ask me about dates, venues, registration, or contacts.",
@@ -266,22 +240,21 @@
       }
     };
 
-    // Simple language detection using keywords and scripts
+    // Language detect
     function detectLang(text) {
       const t = (text || "").toLowerCase().trim();
       if (/[؀-ۿ]/.test(t)) return 'ar';
       if (/[ऀ-ॿ]/.test(t)) return 'hi';
-      // Quick keyword checks
       const esWords = ["qué", "dónde", "próxim", "semana", "hoy", "registro", "deporte", "cultural"];
       const frWords = ["où", "prochain", "aujourd", "semaine", "inscription", "culturel", "sportif"];
-      let scoreEs = esWords.some(w => t.includes(w));
-      let scoreFr = frWords.some(w => t.includes(w));
-      if (scoreEs && !scoreFr) return 'es';
-      if (scoreFr && !scoreEs) return 'fr';
+      const es = esWords.some(w => t.includes(w));
+      const fr = frWords.some(w => t.includes(w));
+      if (es && !fr) return 'es';
+      if (fr && !es) return 'fr';
       return 'en';
     }
 
-    // Intent recognition (multi-language keywords)
+    // Intents
     const intents = [
       { key: 'upcoming', kw: ["upcoming", "next", "events", "week", "happening", "schedule",
                               "आगामी", "कार्यक्रम", "इस हफ्ते", "आज",
@@ -324,10 +297,8 @@
 
     function findEventByNameOrCategory(text) {
       const t = (text || "").toLowerCase();
-      // Try by name words
       let found = events.filter(e => e.name.toLowerCase().includes(t));
       if (found.length) return found;
-      // Try by category keywords
       if (/(sport|खेल|deport|sportif|رياض)/.test(t)) return events.filter(e => e.category === 'Sports');
       if (/(cultur|संस्कृति|culturel|ثقاف)/.test(t)) return events.filter(e => e.category === 'Culture');
       if (/(tech|ai|robot|innov)/.test(t)) return events.filter(e => e.category === 'Technology');
@@ -341,7 +312,7 @@
     const sendBtn = document.getElementById('send');
     const chipsWrap = document.getElementById('chips');
 
-    // Remember last reply language for details and UI
+    // Remember last reply language
     let lastReplyLang = 'en';
 
     // Create chips
@@ -370,7 +341,6 @@
       else bubble.textContent = text || '';
 
       if (role === 'bot') {
-        // Avatar left
         const avatar = document.createElement('div');
         avatar.className = 'mt-0.5 shrink-0 w-8 h-8 rounded-xl bg-gradient-to-br from-violet-500 to-cyan-400 grid place-items-center ring-1 ring-white/20';
         avatar.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none">
@@ -381,7 +351,6 @@
         wrap.appendChild(avatar);
         wrap.appendChild(bubble);
       } else {
-        // User bubble right
         wrap.appendChild(bubble);
       }
       chat.appendChild(wrap);
@@ -434,31 +403,30 @@
             <div class="flex items-center justify-between gap-3">
               <div class="${rtl?'rtl':''}">
                 <div class="font-semibold">${e.name}</div>
-                <div class="text-slate-300/80 text-sm">${date} • ${e.time} • ${e.venue}</div>
+                <div class="text-slate-500 text-sm">${date} • ${e.time} • ${e.venue}</div>
               </div>
               <button data-id="${e.id}" class="view-details px-3 py-1.5 rounded-lg chip text-xs font-semibold">${translate('details', lang)}</button>
             </div>
           </div>
         `;
       }).join('');
-      return lines || `<div class="text-slate-300/85">${translate('noMatch',lang)}</div>`;
+      return lines || `<div class="text-slate-600">${translate('noMatch',lang)}</div>`;
     }
 
     function translate(key, lang) {
       return (ui[lang] && ui[lang][key]) || ui['en'][key] || key;
     }
 
-    // Core reply logic
+    // Reply logic
     function craftReply(text) {
       const lang = detectLang(text);
       const rtl = lang === 'ar';
-      const lower = text.toLowerCase();
       const intent = findIntent(text);
       const related = findEventByNameOrCategory(text);
 
       let html = '';
       if (!intent || intent === 'help') {
-        html += `<div class="${rtl?'rtl':''}"><div class="mb-1.5">${translate('hello', lang)}</div><div class="text-slate-300/85 text-sm">${translate('help', lang)}</div></div>`;
+        html += `<div class="${rtl?'rtl':''}"><div class="mb-1.5">${translate('hello', lang)}</div><div class="text-slate-600 text-sm">${translate('help', lang)}</div></div>`;
         return { html, lang, rtl };
       }
 
@@ -504,7 +472,6 @@
         return { html, lang, rtl };
       }
 
-      // Fallback
       html += `<div class="mb-2 ${rtl?'rtl':''} font-semibold">${translate('noMatch', lang)}</div>`;
       html += buildEventList(events, lang);
       return { html, lang, rtl };
@@ -515,13 +482,11 @@
       const text = input.value.trim();
       if (!text) return;
 
-      // Render user
       msgBubble({ role: 'user', text });
 
       input.value = '';
       autoResize();
 
-      // Typing…
       const lang = detectLang(text);
       const rtl = lang === 'ar';
       const typing = typingIndicator(rtl);
@@ -551,9 +516,9 @@
         handleSend();
       }
     });
-    sendBtn.addEventListener('click', handleSend);
+    document.getElementById('send').addEventListener('click', handleSend);
 
-    // Event delegation for "View details"
+    // View details inside event cards
     chat.addEventListener('click', (e) => {
       const btn = e.target.closest('.view-details');
       if (!btn) return;
@@ -561,18 +526,17 @@
       const ev = events.find(x => x.id === id);
       if (!ev) return;
 
-      // "Open" details as a bot message
       const lang = lastReplyLang || 'en';
       const html = `
         <div class="${lang==='ar'?'rtl':''}">
           <div class="text-lg font-bold mb-1.5">${ev.name}</div>
           <div class="text-slate-700 mb-2">${ev.description}</div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm ${lang==='ar'?'rtl':''}">
-            <div class="rounded-lg bg-white/5 border border-white/10 p-2.5"><span class="font-semibold">Date:</span> ${formatDateISO(ev.date)}</div>
-            <div class="rounded-lg bg-white/5 border border-white/10 p-2.5"><span class="font-semibold">Time:</span> ${ev.time}</div>
-            <div class="rounded-lg bg-white/5 border border-white/10 p-2.5"><span class="font-semibold">Venue:</span> ${ev.venue}</div>
-            <div class="rounded-lg bg-white/5 border border-white/10 p-2.5"><span class="font-semibold">Registration:</span> ${ev.registration}</div>
-            <div class="rounded-lg bg-white/5 border border-white/10 p-2.5"><span class="font-semibold">Contact:</span> ${ev.contact}</div>
+            <div class="rounded-lg border border-slate-200 bg-white p-2.5"><span class="font-semibold">Date:</span> ${formatDateISO(ev.date)}</div>
+            <div class="rounded-lg border border-slate-200 bg-white p-2.5"><span class="font-semibold">Time:</span> ${ev.time}</div>
+            <div class="rounded-lg border border-slate-200 bg-white p-2.5"><span class="font-semibold">Venue:</span> ${ev.venue}</div>
+            <div class="rounded-lg border border-slate-200 bg-white p-2.5"><span class="font-semibold">Registration:</span> ${ev.registration}</div>
+            <div class="rounded-lg border border-slate-200 bg-white p-2.5"><span class="font-semibold">Contact:</span> ${ev.contact}</div>
           </div>
         </div>
       `;
@@ -584,56 +548,45 @@
     function persist() {
       localStorage.setItem('cc_chat', chat.innerHTML);
     }
+
+    // Keep the default welcome visible by default; don't auto-initialize extra messages
     function restore() {
       const saved = localStorage.getItem('cc_chat');
       if (saved) {
         chat.innerHTML = saved;
         chat.scrollTop = chat.scrollHeight;
-      } else {
-        // First-run greeting
-        const guess = detectLang(navigator.language || 'en');
-        lastReplyLang = ['hi','es','fr','ar'].includes(guess) ? guess : 'en';
-        msgBubble({ role: 'bot', text: translate('hello', lastReplyLang) + ' ' + translate('help', lastReplyLang) });
-        persist();
       }
+      // If no saved chat, keep the default welcome already in the HTML
     }
 
-    // Export chat as .txt
-    function exportChat() {
-      const plain = chat.innerText.replace(/\n{3,}/g, '\n\n');
-      const blob = new Blob([plain], { type: 'text/plain;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'dit-events-chat.txt';
-      document.body.appendChild(a);
-      a.click();
-      setTimeout(() => {
-        URL.revokeObjectURL(url);
-        a.remove();
-      }, 0);
-    }
-
-    // Clear chat
+    // Clear chat restores the welcome message
     function clearChat() {
-      chat.innerHTML = '';
+      const welcomeHTML = `
+        <div class="flex items-start gap-3">
+          <div class="mt-0.5 shrink-0 w-8 h-8 rounded-xl bg-gradient-to-br from-violet-500 to-cyan-400 grid place-items-center ring-1 ring-white/20">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <rect x="3" y="7" width="18" height="12" rx="6" stroke="white" stroke-opacity=".9" stroke-width="1.4"/>
+              <circle cx="9" cy="13" r="1.4" fill="white"/>
+              <circle cx="15" cy="13" r="1.4" fill="white"/>
+            </svg>
+          </div>
+          <div class="chat-bubble bot rounded-2xl px-4 py-3">
+            <div>Hi! I’m your Institute Events Bot. Ask me about dates, venues, registration, or contacts.</div>
+            <div class="text-slate-600 mt-1">You can ask things like: “Upcoming events?”, “Sports fest details”, “Where is Cultural Night?”, or “How to register?”.</div>
+          </div>
+        </div>
+      `;
+      chat.innerHTML = welcomeHTML;
       localStorage.removeItem('cc_chat');
-      // Fresh greeting
-      const lang = 'en';
-      msgBubble({ role: 'bot', text: translate('hello', lang) + ' ' + translate('help', lang) });
       persist();
     }
 
-    // Buttons
-    document.getElementById('btn-export').addEventListener('click', exportChat);
-    document.getElementById('btn-export-m').addEventListener('click', exportChat);
+    // Button
     document.getElementById('btn-clear').addEventListener('click', clearChat);
-    document.getElementById('btn-clear-m').addEventListener('click', clearChat);
 
     // Init
     restore();
     autoResize();
   </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9801bdebc28d85eb',t:'MTc1ODA0MDE1OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98021ed5e0f684a1',t:'MTc1ODA0NDEyOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
-
