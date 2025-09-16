@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dummy Institute of Technology • Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg1: #f5f7fb;
+      --bg2: #e9f0ff;
+      --accent: #7c3aed;
+      --accent-2: #06b6d4;
+      --glass: rgba(255,255,255,0.75);
+      --glass-2: rgba(0,0,0,0.06);
+      --ring: rgba(124, 58, 237, 0.25);
+    }
+    html, body { height: 100%; }
+    body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; }
+    /* Soft gradient background with glow */
+    .bg-orb {
+      background:
+        radial-gradient(1100px 700px at 80% -20%, rgba(124,58,237,0.18), transparent 60%),
+        radial-gradient(800px 600px at -10% 20%, rgba(6,182,212,0.16), transparent 55%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+    }
+    /* Glass panel */
+    .glass {
+      background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.8));
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(17,24,39,0.06);
+      box-shadow: 0 10px 25px rgba(17,24,39,0.06), inset 0 1px 0 rgba(255,255,255,0.6);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #7c3aed, #06b6d4);
+      box-shadow: 0 8px 18px rgba(124,58,237,0.35), 0 6px 14px rgba(6,182,212,0.25);
+    }
+    .btn-primary:hover { filter: brightness(1.05); }
+    .chip {
+      background: rgba(17,24,39,0.04);
+      border: 1px solid rgba(17,24,39,0.08);
+    }
+    .chip:hover { background: rgba(17,24,39,0.06); }
+    .scroll-smooth { scroll-behavior: smooth; }
+    .typing-dot {
+      width: 6px; height: 6px; border-radius: 9999px; background: #e5e7eb; opacity: 0.8;
+      animation: bounce 1.2s infinite ease-in-out;
+    }
+    .typing-dot:nth-child(2) { animation-delay: .15s; }
+    .typing-dot:nth-child(3) { animation-delay: .3s; }
+    @keyframes bounce {
+      0%, 80%, 100% { transform: translateY(0); opacity: 0.6; }
+      40% { transform: translateY(-4px); opacity: 1; }
+    }
+    .chat-bubble {
+      max-width: min(78%, 680px);
+      border: 1px solid rgba(17,24,39,0.08);
+    }
+    .chat-bubble.bot {
+      background: linear-gradient(180deg, rgba(124,58,237,0.10), rgba(124,58,237,0.03));
+    }
+    .chat-bubble.user {
+      background: linear-gradient(180deg, rgba(6,182,212,0.10), rgba(6,182,212,0.03));
+    }
+    .ring-focus:focus {
+      outline: none;
+      box-shadow: 0 0 0 4px var(--ring);
+    }
+    .hide-scrollbar::-webkit-scrollbar { width: 0; height: 0; }
+    .hide-scrollbar { scrollbar-width: none; }
+    /* RTL helper if Arabic detected */
+    .rtl { direction: rtl; }
+  </style>
+</head>
+<body class="bg-orb text-slate-800">
+  <div class="min-h-screen flex flex-col items-center justify-start py-8 px-4 md:px-6 lg:px-10">
+
+    <!-- Header -->
+    <header class="w-full max-w-6xl mb-6">
+      <div class="glass rounded-2xl px-6 py-5 md:px-8 md:py-6 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <div class="relative">
+            <!-- Logo Orb -->
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-500 via-fuchsia-500 to-cyan-400 shadow-lg shadow-violet-700/20 ring-2 ring-white/50 grid place-items-center">
+              <!-- Simple Bot SVG -->
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <rect x="3" y="7" width="18" height="12" rx="6" stroke="white" stroke-opacity=".9" stroke-width="1.5"/>
+                <circle cx="9" cy="13" r="1.6" fill="white"/>
+                <circle cx="15" cy="13" r="1.6" fill="white"/>
+                <rect x="11" y="2" width="2" height="5" rx="1" fill="white"/>
+              </svg>
+            </div>
+            <span class="absolute -bottom-2 -right-2 text-[10px] px-2 py-0.5 rounded-full bg-indigo-600/90 text-indigo-50 font-semibold tracking-wide">DIT</span>
+          </div>
+          <div>
+            <h1 class="text-xl md:text-2xl font-extrabold tracking-tight">Dummy Institute of Technology</h1>
+            <p class="text-slate-500/90 text-sm">Ask anything about institute events — any language.</p>
+          </div>
+        </div>
+
+        <div class="hidden sm:flex items-center gap-3">
+          <button id="btn-export" class="px-3 py-2 rounded-xl chip text-sm font-medium hover:scale-[1.02] transition">
+            Export chat
+          </button>
+          <button id="btn-clear" class="px-3 py-2 rounded-xl chip text-sm font-medium hover:scale-[1.02] transition">
+            Clear chat
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Chat Card -->
+    <main class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Sidebar -->
+      <aside class="glass rounded-2xl p-5 md:p-6 lg:col-span-1 h-fit">
+        <h2 class="text-lg font-bold mb-3">Quick topics</h2>
+        <div id="chips" class="flex flex-wrap gap-2">
+          <!-- Chips injected by JS -->
+        </div>
+        <hr class="my-5 border-white/10">
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-slate-300/90">Language auto-detect</span>
+            <span class="px-2 py-1 rounded-md bg-white/10 text-[11px] font-semibold">ON</span>
+          </div>
+          <p class="text-xs text-slate-300/70 leading-relaxed">
+            Type in English, हिन्दी, Español, Français, or العربية. I’ll reply in the same language when possible.
+          </p>
+        </div>
+        <hr class="my-5 border-white/10">
+        <div class="space-y-3">
+          <h3 class="font-semibold">What can I do?</h3>
+          <ul class="text-sm text-slate-600 list-disc ml-5 space-y-1.5">
+            <li>Show upcoming events</li>
+            <li>Find dates, venues, contacts</li>
+            <li>Give registration info</li>
+            <li>Summarize event details</li>
+          </ul>
+        </div>
+        <div class="mt-5 p-4 rounded-xl bg-amber-100 border border-amber-300 text-amber-800 text-sm">
+          Note: This is a demo. It uses sample event data and doesn’t connect to real college systems yet.
+        </div>
+      </aside>
+
+      <!-- Chat Area -->
+      <section class="glass rounded-2xl p-4 md:p-6 lg:col-span-2 flex flex-col h-[70vh] md:h-[72vh]">
+        <!-- Messages -->
+        <div id="chat" class="flex-1 overflow-y-auto hide-scrollbar scroll-smooth pr-1 space-y-4 text-slate-800">
+          <!-- Messages injected here -->
+        </div>
+
+        <!-- Input -->
+        <div class="mt-4">
+          <div class="rounded-xl border border-slate-200 bg-white p-2.5 flex items-end gap-2 shadow-sm">
+            <div class="flex-1">
+              <textarea id="input" rows="1" placeholder="Ask about events, e.g., “What’s happening this week?” or “इस हफ्ते कौन से कार्यक्रम हैं?”" class="w-full bg-transparent text-slate-800 placeholder:text-slate-500/80 resize-none focus:outline-none ring-focus rounded-md px-2 py-1 max-h-40"></textarea>
+            </div>
+            <button id="send" class="btn-primary text-white/95 font-semibold rounded-xl px-4 py-2.5 flex items-center gap-2">
+              <span>Send</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M3 11.5l17-8-7.5 17-2-6.5L3 11.5z" stroke="white" stroke-width="1.6" stroke-linejoin="round" />
+              </svg>
+            </button>
+          </div>
+          <div class="mt-2 flex sm:hidden gap-2">
+            <button id="btn-export-m" class="flex-1 px-3 py-2 rounded-xl chip text-sm font-medium">Export chat</button>
+            <button id="btn-clear-m" class="flex-1 px-3 py-2 rounded-xl chip text-sm font-medium">Clear</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // Sample events dataset (small for demo)
+    const events = [
+      { id: 'e1', name: 'Tech Innovators Summit', date: '2025-10-02', time: '10:00 AM', venue: 'Auditorium A', category: 'Technology', contact: 'tech@college.edu', registration: 'On-site & Online', description: 'Talks and demos on AI, robotics, and startups. Join workshops led by industry experts.' },
+      { id: 'e2', name: 'Cultural Night Fiesta', date: '2025-10-05', time: '6:30 PM', venue: 'Central Lawn', category: 'Culture', contact: 'culture@college.edu', registration: 'Free Entry', description: 'An evening of dance, music, and food stalls celebrating diversity on campus.' },
+      { id: 'e3', name: 'Sports Fest Qualifiers', date: '2025-10-08', time: '8:00 AM', venue: 'Main Stadium', category: 'Sports', contact: 'sports@college.edu', registration: 'Register by 3 Oct', description: 'Track and field, football, and basketball qualifiers. Teams and individuals welcome.' },
+      { id: 'e4', name: 'Research Poster Showcase', date: '2025-10-12', time: '2:00 PM', venue: 'Hall B', category: 'Academics', contact: 'research@college.edu', registration: 'Free for students', description: 'Students present their research posters with Q&A from faculty and guests.' },
+    ];
+
+    // Quick chips (multi-language phrasing)
+    const quickChips = [
+      "Upcoming events",
+      "Sports fest details",
+      "Where is Cultural Night?",
+      "How to register?",
+      "Event contacts",
+      "आज के कार्यक्रम", // Today's events (Hindi intent)
+      "¿Qué hay esta semana?", // Spanish
+      "Quels événements à venir ?", // French
+      "ما هي الفعاليات القادمة؟" // Arabic
+    ];
+
+    // Localized strings (responses)
+    const ui = {
+      en: {
+        hello: "Hi! I’m your Institute Events Bot. Ask me about dates, venues, registration, or contacts.",
+        help: "You can ask things like: “Upcoming events?”, “Sports fest details”, “Where is Cultural Night?”, or “How to register?”.",
+        noMatch: "I didn’t find an exact match, but here are the upcoming events:",
+        upcoming: "Here are the upcoming events:",
+        details: "Here are the details:",
+        register: "Registration information:",
+        contacts: "Here are event contacts:",
+        where: "Location details:",
+        today: "Events happening today:",
+        noneToday: "No events today. Here’s what’s coming soon:",
+        typing: "Typing…"
+      },
+      hi: {
+        hello: "नमस्ते! मैं आपका संस्थान इवेंट्स बॉट हूँ। तारीख, स्थान, रजिस्ट्रेशन या संपर्क के बारे में पूछें।",
+        help: "आप ऐसे पूछ सकते हैं: “आगामी कार्यक्रम?”, “स्पोर्ट्स फेस्ट विवरण”, “कल्चरल नाइट कहाँ है?”, या “रजिस्टर कैसे करें?”.",
+        noMatch: "मुझे सटीक जानकारी नहीं मिली, पर ये आने वाले कार्यक्रम हैं:",
+        upcoming: "आगामी कार्यक्रम:",
+        details: "विवरण:",
+        register: "रजिस्ट्रेशन जानकारी:",
+        contacts: "संपर्क:",
+        where: "स्थान जानकारी:",
+        today: "आज के कार्यक्रम:",
+        noneToday: "आज कोई कार्यक्रम नहीं है। आगे ये होने वाले हैं:",
+        typing: "टाइप कर रहा है…"
+      },
+      es: {
+        hello: "¡Hola! Soy tu bot de eventos del instituto. Pregunta por fechas, lugares, registro o contactos.",
+        help: "Puedes preguntar: “¿Eventos próximos?”, “Detalles del festival deportivo”, “¿Dónde es la Noche Cultural?” o “¿Cómo me registro?”.",
+        noMatch: "No encontré una coincidencia exacta, pero aquí tienes los próximos eventos:",
+        upcoming: "Próximos eventos:",
+        details: "Detalles:",
+        register: "Información de registro:",
+        contacts: "Contactos de eventos:",
+        where: "Detalles del lugar:",
+        today: "Eventos de hoy:",
+        noneToday: "No hay eventos hoy. Próximamente:",
+        typing: "Escribiendo…"
+      },
+      fr: {
+        hello: "Bonjour ! Je suis votre bot des événements de l’institut. Demandez-moi dates, lieux, inscriptions ou contacts.",
+        help: "Par exemple : « Événements à venir ? », « Détails du festival sportif », « Où est la Nuit Culturelle ? », ou « Comment s’inscrire ? ».",
+        noMatch: "Je n’ai pas trouvé exactement, mais voici les prochains événements :",
+        upcoming: "Événements à venir :",
+        details: "Détails :",
+        register: "Informations d’inscription :",
+        contacts: "Contacts des événements :",
+        where: "Informations sur le lieu :",
+        today: "Événements aujourd’hui :",
+        noneToday: "Aucun événement aujourd’hui. Bientôt :",
+        typing: "Saisie…"
+      },
+      ar: {
+        hello: "مرحباً! أنا مساعد فعاليات المعهد. اسألني عن التواريخ والأماكن والتسجيل أو وسائل التواصل.",
+        help: "يمكنك أن تسأل: «ما هي الفعاليات القادمة؟»، «تفاصيل مهرجان الرياضة»، «أين ليلة الثقافة؟» أو «كيف أسجل؟».",
+        noMatch: "لم أجد نتيجة دقيقة، لكن هذه الفعاليات القادمة:",
+        upcoming: "الفعاليات القادمة:",
+        details: "التفاصيل:",
+        register: "معلومات التسجيل:",
+        contacts: "جهات الاتصال:",
+        where: "تفاصيل الموقع:",
+        today: "فعاليات اليوم:",
+        noneToday: "لا فعاليات اليوم. قريباً:",
+        typing: "يكتب…"
+      }
+    };
+
+    // Simple language detection using keywords and scripts
+    function detectLang(text) {
+      const t = (text || "").toLowerCase().trim();
+      if (/[؀-ۿ]/.test(t)) return 'ar';
+      if (/[ऀ-ॿ]/.test(t)) return 'hi';
+      // Quick keyword checks
+      const esWords = ["qué", "dónde", "próxim", "semana", "hoy", "registro", "deporte", "cultural"];
+      const frWords = ["où", "prochain", "aujourd", "semaine", "inscription", "culturel", "sportif"];
+      let scoreEs = esWords.some(w => t.includes(w));
+      let scoreFr = frWords.some(w => t.includes(w));
+      if (scoreEs && !scoreFr) return 'es';
+      if (scoreFr && !scoreEs) return 'fr';
+      return 'en';
+    }
+
+    // Intent recognition (multi-language keywords)
+    const intents = [
+      { key: 'upcoming', kw: ["upcoming", "next", "events", "week", "happening", "schedule",
+                              "आगामी", "कार्यक्रम", "इस हफ्ते", "आज",
+                              "próxim", "semana", "hoy", "eventos",
+                              "prochain", "semaine", "aujourd", "événements",
+                              "القادمة", "فعاليات", "هذا الأسبوع", "اليوم"] },
+      { key: 'today', kw: ["today", "आज", "hoy", "aujourd", "اليوم"] },
+      { key: 'details', kw: ["details", "detail", "info",
+                              "विवरण", "जानकारी",
+                              "detalles", "información",
+                              "détails", "informations",
+                              "تفاصيل", "معلومات"] },
+      { key: 'register', kw: ["register", "registration", "sign up",
+                              "रजिस्टर", "पंजीकरण",
+                              "registro", "inscrib",
+                              "inscription", "s’inscrire",
+                              "تسجيل"] },
+      { key: 'where', kw: ["where", "venue", "location",
+                           "कहाँ", "स्थान",
+                           "dónde", "lugar",
+                           "où", "lieu",
+                           "أين", "المكان"] },
+      { key: 'contact', kw: ["contact", "email", "reach",
+                             "संपर्क",
+                             "contacto",
+                             "contact", "coordonnées",
+                             "اتصال", "تواصل"] },
+      { key: 'sports', kw: ["sport", "sports", "खेल", "deporte", "sportif", "رياضة"] },
+      { key: 'cultural', kw: ["cultural", "संस्कृति", "cultura", "culturel", "ثقافي"] },
+      { key: 'help', kw: ["help", "how", "उपयोग", "कैसे", "ayuda", "cómo", "aide", "comment", "مساعدة", "كيف"] },
+    ];
+
+    function findIntent(text) {
+      const t = (text || "").toLowerCase();
+      for (const intent of intents) {
+        if (intent.kw.some(w => t.includes(w))) return intent.key;
+      }
+      return null;
+    }
+
+    function findEventByNameOrCategory(text) {
+      const t = (text || "").toLowerCase();
+      // Try by name words
+      let found = events.filter(e => e.name.toLowerCase().includes(t));
+      if (found.length) return found;
+      // Try by category keywords
+      if (/(sport|खेल|deport|sportif|رياض)/.test(t)) return events.filter(e => e.category === 'Sports');
+      if (/(cultur|संस्कृति|culturel|ثقاف)/.test(t)) return events.filter(e => e.category === 'Culture');
+      if (/(tech|ai|robot|innov)/.test(t)) return events.filter(e => e.category === 'Technology');
+      if (/(research|poster|academ|शोध)/.test(t)) return events.filter(e => e.category === 'Academics');
+      return events;
+    }
+
+    // DOM refs
+    const chat = document.getElementById('chat');
+    const input = document.getElementById('input');
+    const sendBtn = document.getElementById('send');
+    const chipsWrap = document.getElementById('chips');
+
+    // Remember last reply language for details and UI
+    let lastReplyLang = 'en';
+
+    // Create chips
+    quickChips.forEach(text => {
+      const b = document.createElement('button');
+      b.className = 'chip px-3 py-2 rounded-xl text-sm hover:scale-[1.02] transition';
+      b.textContent = text;
+      b.addEventListener('click', () => {
+        input.value = text;
+        autoResize();
+        handleSend();
+      });
+      chipsWrap.appendChild(b);
+    });
+
+    // Message rendering
+    function msgBubble({ role, text, html, rtl=false }) {
+      const wrap = document.createElement('div');
+      wrap.className = `flex items-start gap-3 ${role === 'user' ? 'justify-end' : ''}`;
+      const bubble = document.createElement('div');
+      bubble.className = `chat-bubble ${role} rounded-2xl px-4 py-3`;
+      bubble.style.whiteSpace = 'pre-wrap';
+      if (rtl) bubble.classList.add('rtl');
+
+      if (html) bubble.innerHTML = html;
+      else bubble.textContent = text || '';
+
+      if (role === 'bot') {
+        // Avatar left
+        const avatar = document.createElement('div');
+        avatar.className = 'mt-0.5 shrink-0 w-8 h-8 rounded-xl bg-gradient-to-br from-violet-500 to-cyan-400 grid place-items-center ring-1 ring-white/20';
+        avatar.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <rect x="3" y="7" width="18" height="12" rx="6" stroke="white" stroke-opacity=".9" stroke-width="1.4"/>
+          <circle cx="9" cy="13" r="1.4" fill="white"/>
+          <circle cx="15" cy="13" r="1.4" fill="white"/>
+        </svg>`;
+        wrap.appendChild(avatar);
+        wrap.appendChild(bubble);
+      } else {
+        // User bubble right
+        wrap.appendChild(bubble);
+      }
+      chat.appendChild(wrap);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function typingIndicator(rtl=false) {
+      const row = document.createElement('div');
+      row.className = `flex items-start gap-3`;
+      const avatar = document.createElement('div');
+      avatar.className = 'mt-0.5 shrink-0 w-8 h-8 rounded-xl bg-gradient-to-br from-violet-500 to-cyan-400 grid place-items-center ring-1 ring-white/20';
+      avatar.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+        <rect x="3" y="7" width="18" height="12" rx="6" stroke="white" stroke-opacity=".9" stroke-width="1.4"/>
+        <circle cx="9" cy="13" r="1.4" fill="white"/>
+        <circle cx="15" cy="13" r="1.4" fill="white"/>
+      </svg>`;
+      const bubble = document.createElement('div');
+      bubble.className = `chat-bubble bot rounded-2xl px-4 py-3 ${rtl ? 'rtl':''}`;
+      const dots = document.createElement('div');
+      dots.className = 'flex items-center gap-1';
+      dots.innerHTML = `<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>`;
+      bubble.appendChild(dots);
+      row.appendChild(avatar);
+      row.appendChild(bubble);
+      chat.appendChild(row);
+      chat.scrollTop = chat.scrollHeight;
+      return row;
+    }
+
+    // Helpers
+    function formatDateISO(iso) {
+      const d = new Date(iso + 'T00:00:00');
+      const opts = { weekday: 'short', month: 'short', day: 'numeric' };
+      return d.toLocaleDateString(undefined, opts);
+    }
+    function isToday(iso) {
+      const d = new Date(iso + 'T00:00:00');
+      const today = new Date();
+      return d.getFullYear() === today.getFullYear() &&
+             d.getMonth() === today.getMonth() &&
+             d.getDate() === today.getDate();
+    }
+
+    function buildEventList(items, lang='en') {
+      const rtl = lang === 'ar';
+      const lines = items.map(e => {
+        const date = formatDateISO(e.date);
+        return `
+          <div class="rounded-xl border border-slate-200 bg-white p-3.5 mb-2.5 shadow-sm">
+            <div class="flex items-center justify-between gap-3">
+              <div class="${rtl?'rtl':''}">
+                <div class="font-semibold">${e.name}</div>
+                <div class="text-slate-300/80 text-sm">${date} • ${e.time} • ${e.venue}</div>
+              </div>
+              <button data-id="${e.id}" class="view-details px-3 py-1.5 rounded-lg chip text-xs font-semibold">${translate('details', lang)}</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+      return lines || `<div class="text-slate-300/85">${translate('noMatch',lang)}</div>`;
+    }
+
+    function translate(key, lang) {
+      return (ui[lang] && ui[lang][key]) || ui['en'][key] || key;
+    }
+
+    // Core reply logic
+    function craftReply(text) {
+      const lang = detectLang(text);
+      const rtl = lang === 'ar';
+      const lower = text.toLowerCase();
+      const intent = findIntent(text);
+      const related = findEventByNameOrCategory(text);
+
+      let html = '';
+      if (!intent || intent === 'help') {
+        html += `<div class="${rtl?'rtl':''}"><div class="mb-1.5">${translate('hello', lang)}</div><div class="text-slate-300/85 text-sm">${translate('help', lang)}</div></div>`;
+        return { html, lang, rtl };
+      }
+
+      if (intent === 'today') {
+        const todays = events.filter(e => isToday(e.date));
+        if (todays.length) {
+          html += `<div class="mb-2 ${rtl?'rtl':''} font-semibold">${translate('today', lang)}</div>`;
+          html += buildEventList(todays, lang);
+        } else {
+          html += `<div class="mb-2 ${rtl?'rtl':''} font-semibold">${translate('noneToday', lang)}</div>`;
+          html += buildEventList(events.slice(0,3), lang);
+        }
+        return { html, lang, rtl };
+      }
+
+      if (intent === 'upcoming') {
+        html += `<div class="mb-2 ${rtl?'rtl':''} font-semibold">${translate('upcoming', lang)}</div>`;
+        html += buildEventList(events, lang);
+        return { html, lang, rtl };
+      }
+
+      if (intent === 'details') {
+        html += `<div class="mb-2 ${rtl?'rtl':''} font-semibold">${translate('details', lang)}</div>`;
+        html += buildEventList(related, lang);
+        return { html, lang, rtl };
+      }
+
+      if (intent === 'register') {
+        const list = related.map(e => `<div class="mb-2"><span class="font-semibold">${e.name}:</span> ${e.registration}</div>`).join('');
+        html += `<div class="mb-2 ${rtl?'rtl':''} font-semibold">${translate('register', lang)}</div>${list || translate('noMatch', lang)}`;
+        return { html, lang, rtl };
+      }
+
+      if (intent === 'contact') {
+        const list = related.map(e => `<div class="mb-2"><span class="font-semibold">${e.name}:</span> ${e.contact}</div>`).join('');
+        html += `<div class="mb-2 ${rtl?'rtl':''} font-semibold">${translate('contacts', lang)}</div>${list || translate('noMatch', lang)}`;
+        return { html, lang, rtl };
+      }
+
+      if (intent === 'where') {
+        const list = related.map(e => `<div class="mb-2"><span class="font-semibold">${e.name}:</span> ${e.venue}</div>`).join('');
+        html += `<div class="mb-2 ${rtl?'rtl':''} font-semibold">${translate('where', lang)}</div>${list || translate('noMatch', lang)}`;
+        return { html, lang, rtl };
+      }
+
+      // Fallback
+      html += `<div class="mb-2 ${rtl?'rtl':''} font-semibold">${translate('noMatch', lang)}</div>`;
+      html += buildEventList(events, lang);
+      return { html, lang, rtl };
+    }
+
+    // Send flow
+    function handleSend() {
+      const text = input.value.trim();
+      if (!text) return;
+
+      // Render user
+      msgBubble({ role: 'user', text });
+
+      input.value = '';
+      autoResize();
+
+      // Typing…
+      const lang = detectLang(text);
+      const rtl = lang === 'ar';
+      const typing = typingIndicator(rtl);
+
+      setTimeout(() => {
+        typing.remove();
+        const reply = craftReply(text);
+        lastReplyLang = reply.lang;
+        msgBubble({ role: 'bot', html: reply.html, rtl: reply.rtl });
+        persist();
+      }, 450 + Math.min(1200, text.length * 15));
+
+      persist();
+    }
+
+    // Auto-resize textarea
+    function autoResize() {
+      input.style.height = 'auto';
+      input.style.height = Math.min(input.scrollHeight, 180) + 'px';
+    }
+    input.addEventListener('input', autoResize);
+
+    // Enter to send (with Shift for newline)
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        handleSend();
+      }
+    });
+    sendBtn.addEventListener('click', handleSend);
+
+    // Event delegation for "View details"
+    chat.addEventListener('click', (e) => {
+      const btn = e.target.closest('.view-details');
+      if (!btn) return;
+      const id = btn.getAttribute('data-id');
+      const ev = events.find(x => x.id === id);
+      if (!ev) return;
+
+      // "Open" details as a bot message
+      const lang = lastReplyLang || 'en';
+      const html = `
+        <div class="${lang==='ar'?'rtl':''}">
+          <div class="text-lg font-bold mb-1.5">${ev.name}</div>
+          <div class="text-slate-700 mb-2">${ev.description}</div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm ${lang==='ar'?'rtl':''}">
+            <div class="rounded-lg bg-white/5 border border-white/10 p-2.5"><span class="font-semibold">Date:</span> ${formatDateISO(ev.date)}</div>
+            <div class="rounded-lg bg-white/5 border border-white/10 p-2.5"><span class="font-semibold">Time:</span> ${ev.time}</div>
+            <div class="rounded-lg bg-white/5 border border-white/10 p-2.5"><span class="font-semibold">Venue:</span> ${ev.venue}</div>
+            <div class="rounded-lg bg-white/5 border border-white/10 p-2.5"><span class="font-semibold">Registration:</span> ${ev.registration}</div>
+            <div class="rounded-lg bg-white/5 border border-white/10 p-2.5"><span class="font-semibold">Contact:</span> ${ev.contact}</div>
+          </div>
+        </div>
+      `;
+      msgBubble({ role: 'bot', html });
+      persist();
+    });
+
+    // Persistence
+    function persist() {
+      localStorage.setItem('cc_chat', chat.innerHTML);
+    }
+    function restore() {
+      const saved = localStorage.getItem('cc_chat');
+      if (saved) {
+        chat.innerHTML = saved;
+        chat.scrollTop = chat.scrollHeight;
+      } else {
+        // First-run greeting
+        const guess = detectLang(navigator.language || 'en');
+        lastReplyLang = ['hi','es','fr','ar'].includes(guess) ? guess : 'en';
+        msgBubble({ role: 'bot', text: translate('hello', lastReplyLang) + ' ' + translate('help', lastReplyLang) });
+        persist();
+      }
+    }
+
+    // Export chat as .txt
+    function exportChat() {
+      const plain = chat.innerText.replace(/\n{3,}/g, '\n\n');
+      const blob = new Blob([plain], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'dit-events-chat.txt';
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => {
+        URL.revokeObjectURL(url);
+        a.remove();
+      }, 0);
+    }
+
+    // Clear chat
+    function clearChat() {
+      chat.innerHTML = '';
+      localStorage.removeItem('cc_chat');
+      // Fresh greeting
+      const lang = 'en';
+      msgBubble({ role: 'bot', text: translate('hello', lang) + ' ' + translate('help', lang) });
+      persist();
+    }
+
+    // Buttons
+    document.getElementById('btn-export').addEventListener('click', exportChat);
+    document.getElementById('btn-export-m').addEventListener('click', exportChat);
+    document.getElementById('btn-clear').addEventListener('click', clearChat);
+    document.getElementById('btn-clear-m').addEventListener('click', clearChat);
+
+    // Init
+    restore();
+    autoResize();
+  </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9801bdebc28d85eb',t:'MTc1ODA0MDE1OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
